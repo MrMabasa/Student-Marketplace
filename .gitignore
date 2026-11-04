@@ -1,0 +1,19 @@
+# Exclude Android Studio project settings.
+.idea/
+*.iml
+
+# Exclude generated Gradle files and build outputs.
+.gradle/
+**/build/
+
+# Exclude local machine configuration.
+local.properties
+
+# Exclude native build outputs.
+.externalNativeBuild/
+.cxx/
+
+# Exclude generated captures and operating system files.
+captures/
+.DS_Store
+Thumbs.db

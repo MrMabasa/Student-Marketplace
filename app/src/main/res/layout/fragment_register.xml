@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Allows the registration form to scroll on smaller screens. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- Holds all registration fields vertically. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- Registration heading. -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Student Account"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Student's full name. -->
+        <EditText
+            android:id="@+id/etRegisterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Full name"
+            android:inputType="textPersonName"
+            android:autofillHints="name" />
+
+        <!-- Student's email address. -->
+        <EditText
+            android:id="@+id/etRegisterEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Student email address"
+            android:inputType="textEmailAddress"
+            android:autofillHints="emailAddress"
+            android:layout_marginTop="12dp" />
+
+        <!-- Student number for the verification process. -->
+        <EditText
+            android:id="@+id/etStudentNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Student number"
+            android:inputType="text"
+            android:autofillHints="username"
+            android:layout_marginTop="12dp" />
+
+        <!-- Student's university or institution. -->
+        <EditText
+            android:id="@+id/etInstitution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="University or institution"
+            android:inputType="textCapWords"
+            android:layout_marginTop="12dp" />
+
+        <!-- Password for the new account. -->
+        <EditText
+            android:id="@+id/etRegisterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Create password"
+            android:inputType="textPassword"
+            android:autofillHints="newPassword"
+            android:layout_marginTop="12dp" />
+
+        <!-- Confirms the password entered above. -->
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Confirm password"
+            android:inputType="textPassword"
+            android:layout_marginTop="12dp" />
+
+        <!-- Yellow secondary button for new student registration. -->
+        <Button
+            android:id="@+id/btnRegister"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Create Account"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>

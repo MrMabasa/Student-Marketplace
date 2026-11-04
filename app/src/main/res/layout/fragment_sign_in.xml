@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Arranges the sign-in form vertically. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <!-- Sign-in screen heading. -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student Sign In"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="28dp" />
+
+    <!-- Student's registered email address. -->
+    <EditText
+        android:id="@+id/etSignInEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:hint="Student email address"
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress" />
+
+    <!-- Student's password. -->
+    <EditText
+        android:id="@+id/etSignInPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:autofillHints="password"
+        android:layout_marginTop="12dp" />
+
+    <!-- Primary blue button for student sign-in. -->
+    <Button
+        android:id="@+id/btnSignIn"
+        style="@style/StudentMarketplace.PrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Sign In"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>

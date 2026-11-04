@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Central colour palette for The Student Marketplace app. -->
+<resources>
+
+    <!-- Main brand colours taken from the app logo. -->
+    <color name="brand_blue">#073BAE</color>
+    <color name="brand_navy">#071B59</color>
+    <color name="brand_yellow">#FFD600</color>
+    <color name="brand_white">#FFFFFF</color>
+
+    <!-- Supporting interface colours. -->
+    <color name="background_light">#F3F6FC</color>
+    <color name="text_primary">#071B59</color>
+    <color name="text_secondary">#344054</color>
+    <color name="border_light">#D9E2F2</color>
+
+</resources>

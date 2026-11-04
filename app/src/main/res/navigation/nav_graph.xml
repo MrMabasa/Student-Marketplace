@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Defines all app screens and their navigation paths. -->
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <!-- Starting screen: users can sign in or register. -->
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.studentmarketplace.ui.auth.WelcomeFragment"
+        android:label="Welcome">
+
+        <!-- Opens the sign-in screen. -->
+        <action
+            android:id="@+id/action_welcome_to_signIn"
+            app:destination="@id/signInFragment" />
+
+        <!-- Opens the registration screen. -->
+        <action
+            android:id="@+id/action_welcome_to_register"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <!-- Existing student sign-in screen. -->
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.studentmarketplace.ui.auth.SignInFragment"
+        android:label="Sign In">
+
+        <!-- Opens Home after successful authentication. -->
+        <action
+            android:id="@+id/action_signIn_to_home"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+    <!-- New student registration screen. -->
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.studentmarketplace.ui.auth.RegisterFragment"
+        android:label="Register">
+
+        <!-- Opens Home after successful registration. -->
+        <action
+            android:id="@+id/action_register_to_home"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+    <!-- Main marketplace landing screen. -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.studentmarketplace.ui.marketplace.HomeFragment"
+        android:label="Home">
+
+        <!-- Opens the available marketplace listings. -->
+        <action
+            android:id="@+id/action_home_to_browse"
+            app:destination="@id/browseListingsFragment" />
+
+        <!-- Opens the form for creating a listing. -->
+        <action
+            android:id="@+id/action_home_to_createListing"
+            app:destination="@id/createListingFragment" />
+    </fragment>
+
+    <!-- Displays available marketplace listings. -->
+    <fragment
+        android:id="@+id/browseListingsFragment"
+        android:name="com.studentmarketplace.ui.marketplace.BrowseListingsFragment"
+        android:label="Browse Listings">
+
+        <!-- Opens the selected listing. -->
+        <action
+            android:id="@+id/action_browse_to_listingDetails"
+            app:destination="@id/listingDetailsFragment" />
+    </fragment>
+
+    <!-- Displays information about an individual listing. -->
+    <fragment
+        android:id="@+id/listingDetailsFragment"
+        android:name="com.studentmarketplace.ui.marketplace.ListingDetailsFragment"
+        android:label="Listing Details" />
+
+    <!-- Allows a student to create a marketplace listing. -->
+    <fragment
+        android:id="@+id/createListingFragment"
+        android:name="com.studentmarketplace.ui.marketplace.CreateListingFragment"
+        android:label="Create Listing">
+
+        <!-- Returns to the browsing screen. -->
+        <action
+            android:id="@+id/action_createListing_to_browse"
+            app:destination="@id/browseListingsFragment" />
+    </fragment>
+
+</navigation>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Allows the Home screen to scroll on smaller devices. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background_light">
+
+    <!-- Arranges the Home screen content vertically. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Main marketplace heading in the brand navy colour. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student Marketplace"
+            android:textColor="@color/brand_navy"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Welcomes the student to the marketplace. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome! Find what you need or sell items to fellow students."
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Section heading for marketplace actions. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marketplace"
+            android:textColor="@color/brand_blue"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Opens the available listings screen using the primary blue style. -->
+        <Button
+            android:id="@+id/btnBrowseListings"
+            style="@style/StudentMarketplace.PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="Browse Listings" />
+
+        <!-- Opens the create-listing screen using the yellow secondary style. -->
+        <Button
+            android:id="@+id/btnCreateListing"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="Create a Listing"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

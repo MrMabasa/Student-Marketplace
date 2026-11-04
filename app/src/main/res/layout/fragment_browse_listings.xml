@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Allows the listing screen to scroll as more products are added. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- Contains the search field and listing content. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Screen heading. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Browse Listings"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Search field for products and module codes. -->
+        <EditText
+            android:id="@+id/etSearchListings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Search items or module codes"
+            android:inputType="text"
+            android:autofillHints="none" />
+
+        <!-- Category section heading. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Placeholder category options for the initial layout. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Textbooks  |  Electronics  |  Stationery"
+            android:textSize="16sp"
+            android:padding="12dp" />
+
+        <!-- Section heading for available products. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Available Items"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Temporary sample listing; dynamic listings will come from the API. -->
+        <TextView
+            android:id="@+id/tvSampleListing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Example listing: Introduction to Programming textbook"
+            android:textSize="16sp"
+            android:padding="12dp" />
+
+        <!-- Opens the details of the sample listing. -->
+        <Button
+            android:id="@+id/btnViewListingDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="View Listing Details"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+
+</ScrollView>

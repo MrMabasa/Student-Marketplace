@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Makes the listing form scrollable on smaller devices. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- Holds the listing information fields vertically. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Screen heading. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create a Listing"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Name of the item being sold. -->
+        <EditText
+            android:id="@+id/etListingTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Item title"
+            android:inputType="textCapSentences" />
+
+        <!-- Category of the item. -->
+        <EditText
+            android:id="@+id/etListingCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Category (e.g. Textbooks)"
+            android:inputType="textCapWords"
+            android:layout_marginTop="12dp" />
+
+        <!-- Selling price in South African rand. -->
+        <EditText
+            android:id="@+id/etListingPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Price (R)"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="12dp" />
+
+        <!-- Condition of the item. -->
+        <EditText
+            android:id="@+id/etListingCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Condition (e.g. Good)"
+            android:inputType="textCapWords"
+            android:layout_marginTop="12dp" />
+
+        <!-- Optional module code for textbooks and course equipment. -->
+        <EditText
+            android:id="@+id/etModuleCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Module code (optional)"
+            android:inputType="textCapCharacters"
+            android:layout_marginTop="12dp" />
+
+        <!-- Description of the item being sold. -->
+        <EditText
+            android:id="@+id/etListingDescription"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="top"
+            android:hint="Describe your item"
+            android:inputType="textCapSentences|textMultiLine"
+            android:layout_marginTop="12dp" />
+
+        <!-- Placeholder for adding an item photograph. -->
+        <Button
+            android:id="@+id/btnAddListingPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Add Item Photo"
+            android:layout_marginTop="16dp" />
+
+        <!-- Submits the listing when backend functionality is implemented. -->
+        <Button
+            android:id="@+id/btnSubmitListing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Publish Listing"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

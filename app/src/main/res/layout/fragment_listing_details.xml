@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Allows the listing details to scroll on smaller screens. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- Contains the selected item's information. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Screen heading. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Listing Details"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Placeholder area for the item's photograph. -->
+        <ImageView
+            android:id="@+id/ivListingImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Marketplace item photograph"
+            android:scaleType="centerCrop"
+            android:background="#E0E0E0" />
+
+        <!-- Name of the marketplace item. -->
+        <TextView
+            android:id="@+id/tvListingTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Introduction to Programming"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
+
+        <!-- Item selling price. -->
+        <TextView
+            android:id="@+id/tvListingPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price: R350"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp" />
+
+        <!-- Item condition. -->
+        <TextView
+            android:id="@+id/tvListingCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Condition: Good"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- Item description. -->
+        <TextView
+            android:id="@+id/tvListingDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A useful programming textbook for students studying introductory programming."
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Seller information. -->
+        <TextView
+            android:id="@+id/tvSellerInformation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seller: Verified Student"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp" />
+
+        <!-- Placeholder for the buyer's request action. -->
+        <Button
+            android:id="@+id/btnRequestItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Request This Item"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>
