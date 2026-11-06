@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "880762677220",
+    "project_id": "the-student-marketplace-4f0a1",
+    "storage_bucket": "the-student-marketplace-4f0a1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880762677220:android:3590f8f02acf96cd1a89f1",
+        "android_client_info": {
+          "package_name": "com.studentmarketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880762677220-ptb22fiiih5cfph364bt17ffb79dcc7v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studentmarketplace",
+            "certificate_hash": "dc75a8735720a700a8327460cb58fd76a698804a"
+          }
+        },
+        {
+          "client_id": "880762677220-jcoivfn99k80qgc56rvfvhio7aisdgn9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLQBGw4GE9u-QkT-1HzJeFnlTrXZe-O68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880762677220-jcoivfn99k80qgc56rvfvhio7aisdgn9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
