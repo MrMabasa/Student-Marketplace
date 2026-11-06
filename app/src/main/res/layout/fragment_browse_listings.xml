@@ -1,83 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Allows the listing screen to scroll as more products are added. -->
+<!-- Allows the Browse screen to scroll on smaller devices. -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/background_light">
 
-    <!-- Contains the search field and listing content. -->
+    <!-- Arranges search, filters and listings vertically. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Screen heading. -->
+        <!-- Main screen heading. -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Browse Listings"
-            android:textSize="26sp"
+            android:textColor="@color/brand_navy"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp" />
 
-        <!-- Search field for products and module codes. -->
+        <!-- Searches listing titles, descriptions and module codes. -->
         <EditText
             android:id="@+id/etSearchListings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="52dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/brand_blue"
             android:hint="Search items or module codes"
             android:inputType="text"
-            android:autofillHints="none" />
+            android:autofillHints="none"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary" />
 
-        <!-- Category section heading. -->
+        <!-- Introduces the available filters. -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textSize="20sp"
+            android:text="Filter Listings"
+            android:textColor="@color/brand_blue"
+            android:textSize="21sp"
             android:textStyle="bold"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp" />
 
-        <!-- Placeholder category options for the initial layout. -->
-        <TextView
+        <!-- Selects a marketplace category. -->
+        <AutoCompleteTextView
+            android:id="@+id/etFilterCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Textbooks  |  Electronics  |  Stationery"
-            android:textSize="16sp"
-            android:padding="12dp" />
+            android:minHeight="52dp"
+            android:padding="12dp"
+            android:hint="Select category"
+            android:inputType="none"
+            android:backgroundTint="@color/brand_blue"
+            android:textColor="@color/text_primary" />
 
-        <!-- Section heading for available products. -->
+        <!-- Groups the minimum and maximum price fields. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <!-- Sets the minimum listing price. -->
+            <EditText
+                android:id="@+id/etMinPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="52dp"
+                android:layout_marginEnd="8dp"
+                android:padding="12dp"
+                android:hint="Min price (R)"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@color/brand_blue"
+                android:textColor="@color/text_primary" />
+
+            <!-- Sets the maximum listing price. -->
+            <EditText
+                android:id="@+id/etMaxPrice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="52dp"
+                android:layout_marginStart="8dp"
+                android:padding="12dp"
+                android:hint="Max price (R)"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@color/brand_blue"
+                android:textColor="@color/text_primary" />
+
+        </LinearLayout>
+
+        <!-- Selects the item's condition. -->
+        <AutoCompleteTextView
+            android:id="@+id/etFilterCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:layout_marginTop="12dp"
+            android:padding="12dp"
+            android:hint="Select condition"
+            android:inputType="none"
+            android:backgroundTint="@color/brand_blue"
+            android:textColor="@color/text_primary" />
+
+        <!-- Clears all selected filters. -->
+        <Button
+            android:id="@+id/btnClearFilters"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginTop="12dp"
+            android:text="Clear Filters" />
+
+        <!-- Displays the number or status of matching listings. -->
         <TextView
+            android:id="@+id/tvListingResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Available Items"
-            android:textSize="20sp"
+            android:textColor="@color/brand_blue"
+            android:textSize="21sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="28dp"
             android:layout_marginBottom="12dp" />
 
-        <!-- Temporary sample listing; dynamic listings will come from the API. -->
+        <!-- Displays the current sample listing. -->
         <TextView
             android:id="@+id/tvSampleListing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Example listing: Introduction to Programming textbook"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
-            android:padding="12dp" />
+            android:padding="16dp"
+            android:background="@color/brand_white" />
 
-        <!-- Opens the details of the sample listing. -->
+        <!-- Opens the sample listing details. -->
         <Button
             android:id="@+id/btnViewListingDetails"
+            style="@style/StudentMarketplace.PrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="52dp"
             android:text="View Listing Details"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="16dp" />
 
     </LinearLayout>
 

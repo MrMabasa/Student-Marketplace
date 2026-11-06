@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Configures the page for mobile devices. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification | The Student Marketplace</title>
+
+    <!-- Applies the marketplace brand colours. -->
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #071B59;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        main {
+            width: 90%;
+            max-width: 520px;
+            padding: 30px;
+            box-sizing: border-box;
+            background: #10286B;
+            border-radius: 14px;
+        }
+
+        h1 { color: #FFD600; }
+
+        #status {
+            margin-top: 24px;
+            padding: 18px;
+            border: 1px solid #FFD600;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <!-- Identifies the marketplace. -->
+    <h1>The Student Marketplace</h1>
+    <p>Email Verification</p>
+
+    <!-- Shows the actual verification result. -->
+    <div id="status">Checking your verification link...</div>
+</main>
+
+<script type="module">
+    // Imports Firebase web authentication functions.
+    import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+    import { getAuth, applyActionCode } from
+        "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    // Reads the parameters Firebase adds to the email link.
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+    const actionCode = params.get("oobCode");
+    const apiKey = params.get("apiKey");
+
+    // Selects the page status element.
+    const status = document.getElementById("status");
+
+    // Applies the Firebase email verification code.
+    async function verifyEmail() {
+        try {
+            // Checks that all required parameters are present.
+            if (mode !== "verifyEmail" || !actionCode || !apiKey) {
+                throw new Error(
+                    "Missing verification parameters. Mode: " +
+                    (mode || "missing") +
+                    ", action code: " +
+                    (actionCode ? "present" : "missing") +
+                    ", API key: " +
+                    (apiKey ? "present" : "missing")
+                );
+            }
+
+            // Connects to the existing Firebase project.
+            const app = initializeApp({
+                apiKey: apiKey,
+                authDomain:
+                    "the-student-marketplace-4f0a1.firebaseapp.com",
+                projectId: "the-student-marketplace-4f0a1"
+            });
+
+            // Initialises Firebase Authentication.
+            const auth = getAuth(app);
+
+            // Completes the email verification operation.
+            await applyActionCode(auth, actionCode);
+
+            // Confirms that Firebase accepted the verification code.
+            status.textContent =
+                "SUCCESS: Firebase has verified your email address. " +
+                "Return to the app and press I am verified.";
+
+        } catch (error) {
+            // Logs the detailed Firebase error for diagnosis.
+            console.error("Verification error:", error);
+
+            // Displays the actual error code and message.
+            status.textContent =
+                "VERIFICATION FAILED\n\n" +
+                "Error code: " + (error.code || "unknown") +
+                "\nMessage: " + (error.message || "No details available");
+        }
+    }
+
+    // Starts verification automatically when the page opens.
+    verifyEmail();
+</script>
+</body>
+</html>

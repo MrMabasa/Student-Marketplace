@@ -30,10 +30,15 @@
         android:name="com.studentmarketplace.ui.auth.SignInFragment"
         android:label="Sign In">
 
-        <!-- Opens Home after successful authentication. -->
+        <!-- Opens Home after successful verified authentication. -->
         <action
             android:id="@+id/action_signIn_to_home"
             app:destination="@id/homeFragment" />
+
+        <!-- Opens email verification when the account is unverified. -->
+        <action
+            android:id="@+id/action_signIn_to_emailVerification"
+            app:destination="@id/emailVerificationFragment" />
     </fragment>
 
     <!-- New student registration screen. -->
@@ -42,10 +47,31 @@
         android:name="com.studentmarketplace.ui.auth.RegisterFragment"
         android:label="Register">
 
-        <!-- Opens Home after successful registration. -->
+        <!-- Opens the email verification screen after registration. -->
         <action
-            android:id="@+id/action_register_to_home"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_register_to_emailVerification"
+            app:destination="@id/emailVerificationFragment" />
+    </fragment>
+
+    <!-- Waits for the student to verify their email address. -->
+    <fragment
+        android:id="@+id/emailVerificationFragment"
+        android:name="com.studentmarketplace.ui.auth.EmailVerificationFragment"
+        android:label="Verify Email">
+
+        <!-- Opens Home after successful email verification. -->
+        <action
+            android:id="@+id/action_emailVerification_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- Returns to sign-in when the student chooses another account. -->
+        <action
+            android:id="@+id/action_emailVerification_to_signIn"
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <!-- Main marketplace landing screen. -->

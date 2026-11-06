@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Provides a scrollable email verification screen. -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background_light">
+
+    <!-- Centres the verification content vertically. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="28dp">
+
+        <!-- Displays the email verification icon. -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✉"
+            android:textSize="64sp"
+            android:textColor="@color/brand_blue"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Main verification heading. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check your email!"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:textColor="@color/brand_navy"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Explains why email verification is required. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your Student Marketplace account has been created. We have sent you a verification link. Please open your email and click the link to verify your address."
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp" />
+
+        <!-- Displays the email address receiving the verification link. -->
+        <TextView
+            android:id="@+id/tvVerificationEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="your@email.com"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/brand_blue"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Shows the pending verification status. -->
+        <TextView
+            android:id="@+id/tvVerificationStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Waiting for email verification..."
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Allows students to manually refresh verification status. -->
+        <Button
+            android:id="@+id/btnCheckVerification"
+            style="@style/StudentMarketplace.PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="I've verified my email" />
+
+        <!-- Allows another verification email to be sent. -->
+        <Button
+            android:id="@+id/btnResendVerification"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="Resend verification email"
+            android:layout_marginTop="12dp" />
+
+        <!-- Allows the student to return to the sign-in screen. -->
+        <Button
+            android:id="@+id/btnReturnToSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="Use another account"
+            android:layout_marginTop="12dp" />
+
+        <!-- Explains the automatic verification behaviour. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Already clicked the link? Return to this app. We'll automatically check your verification status."
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+
+</ScrollView>

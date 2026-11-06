@@ -14,6 +14,10 @@
 
         <item name="android:colorBackground">@color/brand_white</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
+        <!-- Keeps input hints readable across all app screens. -->
+        <item name="android:textColorHint">@color/text_secondary</item>
+        <!-- Sets a consistent dark colour for default widget text. -->
+        <item name="android:textColor">@color/text_primary</item>
 
         <item name="android:statusBarColor">@color/brand_navy</item>
         <item name="android:navigationBarColor">@color/brand_navy</item>

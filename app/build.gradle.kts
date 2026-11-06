@@ -1,5 +1,10 @@
+// Declares plugins applied to the Android app.
 plugins {
+    // Android application build support.
     alias(libs.plugins.android.application)
+
+    // Firebase Google Services configuration.
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -38,10 +43,13 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
-// Navigation Components
+    // Navigation Components
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-// Testing Components
+    // Adds Firebase Authentication
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    // Testing Components
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

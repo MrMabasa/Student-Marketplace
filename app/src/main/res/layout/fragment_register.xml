@@ -3,6 +3,7 @@
 <!-- Allows the registration form to scroll on smaller screens. -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -56,36 +57,69 @@
             android:autofillHints="username"
             android:layout_marginTop="12dp" />
 
-        <!-- Student's university or institution. -->
-        <EditText
+        <!-- Lets the student select an institution from the dropdown. -->
+        <AutoCompleteTextView
             android:id="@+id/etInstitution"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/brand_blue"
+            android:hint="Select your institution"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:layout_marginTop="12dp" />
+
+        <!-- Appears only when Other / Not Listed is selected. -->
+        <EditText
+            android:id="@+id/etCustomInstitution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:hint="University or institution"
+            android:hint="Enter your institution name"
             android:inputType="textCapWords"
-            android:layout_marginTop="12dp" />
+            android:visibility="gone"
+            android:layout_marginTop="8dp" />
 
-        <!-- Password for the new account. -->
-        <EditText
-            android:id="@+id/etRegisterPassword"
+        <!-- Password field with a built-in visibility toggle. -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:hint="Create password"
-            android:inputType="textPassword"
-            android:autofillHints="newPassword"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="12dp"
+            app:endIconMode="password_toggle">
 
-        <!-- Confirms the password entered above. -->
-        <EditText
-            android:id="@+id/etConfirmPassword"
+            <!-- Accepts the new account password. -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRegisterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Create password"
+                android:inputType="textPassword"
+                android:autofillHints="newPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Password confirmation field with its own visibility toggle. -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:hint="Confirm password"
-            android:inputType="textPassword"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="12dp"
+            app:endIconMode="password_toggle">
+
+            <!-- Confirms the password entered above. -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:hint="Confirm password"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Yellow secondary button for new student registration. -->
         <Button

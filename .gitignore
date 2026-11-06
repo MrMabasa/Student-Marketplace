@@ -17,3 +17,15 @@ local.properties
 captures/
 .DS_Store
 Thumbs.db
+
+.firebase/
+app/google-services.json
+*.logcat
+StudentMarketplace2/
+*.jks
+*.keystore
+*.pem
+*.key
+.env
+.env.*
+!.env.example

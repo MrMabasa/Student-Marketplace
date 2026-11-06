@@ -1,92 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Allows the listing details to scroll on smaller screens. -->
+<!-- Allows listing details to scroll on smaller screens. -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/background_light">
 
-    <!-- Contains the selected item's information. -->
+    <!-- Arranges the selected item's information vertically. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Screen heading. -->
+        <!-- Main screen heading. -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Listing Details"
-            android:textSize="26sp"
+            android:textColor="@color/brand_navy"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp" />
 
-        <!-- Placeholder area for the item's photograph. -->
+        <!-- Displays the marketplace item's photograph. -->
         <ImageView
             android:id="@+id/ivListingImage"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="220dp"
             android:contentDescription="Marketplace item photograph"
             android:scaleType="centerCrop"
-            android:background="#E0E0E0" />
+            android:background="@color/border_light" />
 
-        <!-- Name of the marketplace item. -->
+        <!-- Displays the item name. -->
         <TextView
             android:id="@+id/tvListingTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Introduction to Programming"
-            android:textSize="22sp"
+            android:textColor="@color/brand_navy"
+            android:textSize="23sp"
             android:textStyle="bold"
             android:layout_marginTop="20dp" />
 
-        <!-- Item selling price. -->
+        <!-- Displays the selling price. -->
         <TextView
             android:id="@+id/tvListingPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Price: R350"
-            android:textSize="20sp"
+            android:textColor="@color/brand_blue"
+            android:textSize="21sp"
             android:textStyle="bold"
             android:layout_marginTop="12dp" />
 
-        <!-- Item condition. -->
+        <!-- Displays the item's condition. -->
         <TextView
             android:id="@+id/tvListingCondition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Condition: Good"
+            android:textColor="@color/text_secondary"
             android:textSize="16sp"
             android:layout_marginTop="12dp" />
 
-        <!-- Item description. -->
+        <!-- Displays the item's description. -->
         <TextView
             android:id="@+id/tvListingDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="A useful programming textbook for students studying introductory programming."
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
-            android:layout_marginTop="16dp" />
+            android:lineSpacingExtra="4dp"
+            android:layout_marginTop="20dp" />
 
-        <!-- Seller information. -->
+        <!-- Displays information about the seller. -->
         <TextView
             android:id="@+id/tvSellerInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Seller: Verified Student"
+            android:textColor="@color/brand_navy"
             android:textSize="16sp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="24dp" />
 
-        <!-- Placeholder for the buyer's request action. -->
+        <!-- Provides the buyer's request action. -->
         <Button
             android:id="@+id/btnRequestItem"
+            style="@style/StudentMarketplace.PrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="52dp"
             android:text="Request This Item"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="28dp" />
 
     </LinearLayout>
 

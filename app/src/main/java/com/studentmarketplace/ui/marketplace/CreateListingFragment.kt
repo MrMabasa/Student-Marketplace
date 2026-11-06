@@ -4,12 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.studentmarketplace.R
 
-// Displays the form used to create a new marketplace listing.
+// Displays the listing form only to verified students.
 class CreateListingFragment : Fragment() {
+
+    // Provides access to Firebase Authentication.
+    private lateinit var firebaseAuth: FirebaseAuth
+
+    // Prevents repeated redirects during verification checks.
+    private var isRedirecting = false
 
     // Loads the Create Listing XML layout.
     override fun onCreateView(
@@ -24,14 +34,127 @@ class CreateListingFragment : Fragment() {
         )
     }
 
-    // Connects the submission button to the browsing screen.
+    // Checks account verification before enabling the listing form.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Temporary navigation for testing.
-        // Actual listing validation and submission will be implemented later.
+        // Initialises Firebase Authentication.
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        // Hides the form until verification is confirmed.
+        view.visibility = View.INVISIBLE
+
+        // Retrieves the currently signed-in user.
+        val user = firebaseAuth.currentUser
+
+        // Redirects users without an active session.
+        if (user == null) {
+            redirectToSignIn()
+            return
+        }
+
+        // Refreshes the account's latest verification status.
+        user.reload().addOnCompleteListener { task ->
+
+            // Stops if the fragment is no longer attached.
+            if (!isAdded || viewLifecycleOwnerLiveData.value == null) {
+                return@addOnCompleteListener
+            }
+
+            // Blocks access if Firebase cannot refresh the account.
+            if (!task.isSuccessful) {
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to verify your account. Please sign in again.",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                // Signs out when account status cannot be confirmed.
+                firebaseAuth.signOut()
+                redirectToSignIn()
+                return@addOnCompleteListener
+            }
+
+            // Retrieves the refreshed Firebase user.
+            val refreshedUser = firebaseAuth.currentUser
+
+            // Blocks access if the account no longer exists.
+            if (refreshedUser == null) {
+                redirectToSignIn()
+                return@addOnCompleteListener
+            }
+
+            // Enables the form only for verified students.
+            if (refreshedUser.isEmailVerified) {
+                view.visibility = View.VISIBLE
+                setupListingForm(view)
+            } else {
+                // Keeps the session active for email verification.
+                redirectToVerification()
+            }
+        }
+    }
+
+    // Sets up the condition dropdown and submission navigation.
+    private fun setupListingForm(view: View) {
+
+        // Defines the standard item conditions available to sellers.
+        val conditions = arrayOf(
+            "Brand New",
+            "Like New",
+            "Good",
+            "Fair",
+            "For Parts / Repair"
+        )
+
+        // Connects the condition choices to the dropdown field.
+        val conditionDropdown =
+            view.findViewById<AutoCompleteTextView>(R.id.etListingCondition)
+
+        // Creates the dropdown list adapter.
+        val conditionAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            conditions
+        )
+
+        // Displays the available conditions when the field is tapped.
+        conditionDropdown.setAdapter(conditionAdapter)
+        conditionDropdown.setOnClickListener {
+            conditionDropdown.showDropDown()
+        }
+
+        // Preserves the existing temporary submission navigation.
         view.findViewById<View>(R.id.btnSubmitListing).setOnClickListener {
             findNavController().navigate(R.id.action_createListing_to_browse)
         }
+    }
+
+    // Redirects unverified students to email verification.
+    private fun redirectToVerification() {
+        if (!isAdded || isRedirecting) return
+
+        val navController = findNavController()
+
+        if (navController.currentDestination?.id != R.id.createListingFragment) {
+            return
+        }
+
+        isRedirecting = true
+        navController.navigate(R.id.emailVerificationFragment)
+    }
+
+    // Redirects unauthenticated students to sign-in.
+    private fun redirectToSignIn() {
+        if (!isAdded || isRedirecting) return
+
+        val navController = findNavController()
+
+        if (navController.currentDestination?.id != R.id.createListingFragment) {
+            return
+        }
+
+        isRedirecting = true
+        navController.navigate(R.id.signInFragment)
     }
 }
