@@ -46,15 +46,19 @@
             android:inputType="textCapSentences" />
 
         <!-- Captures the item's category. -->
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/etListingCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="52dp"
             android:padding="12dp"
             android:backgroundTint="@color/brand_blue"
-            android:hint="Category (e.g. Textbooks)"
-            android:inputType="textCapWords"
+            android:hint="Select item category"
+            android:inputType="none"
+            android:focusable="true"
+            android:clickable="true"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
             android:layout_marginTop="12dp" />
 
         <!-- Captures the selling price in South African rand. -->
@@ -108,7 +112,6 @@
             android:hint="Describe your item"
             android:inputType="textCapSentences|textMultiLine"
             android:layout_marginTop="12dp" />
-
         <!-- Opens the future item photo selection feature. -->
         <Button
             android:id="@+id/btnAddListingPhoto"
@@ -118,7 +121,15 @@
             android:minHeight="52dp"
             android:text="Add Item Photo"
             android:layout_marginTop="20dp" />
-
+        <!-- Previews the photo selected by the student. -->
+        <ImageView
+            android:id="@+id/ivListingPhotoPreview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Selected listing photo"
+            android:visibility="gone" />
         <!-- Publishes the listing once saving functionality is implemented. -->
         <Button
             android:id="@+id/btnSubmitListing"

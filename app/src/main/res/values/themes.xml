@@ -9,7 +9,7 @@
 
         <item name="colorPrimary">@color/brand_blue</item>
         <item name="colorOnPrimary">@color/brand_white</item>
-        <item name="colorSecondary">@color/brand_yellow</item>
+        <item name="colorSecondary">#FF9800</item>
         <item name="colorOnSecondary">@color/brand_navy</item>
 
         <item name="android:colorBackground">@color/brand_white</item>
@@ -38,7 +38,7 @@
     <!-- Reusable yellow secondary button. -->
     <style name="StudentMarketplace.SecondaryButton"
         parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/brand_yellow</item>
+        <item name="backgroundTint">#FF9800</item>
         <item name="android:textColor">@color/brand_navy</item>
         <item name="cornerRadius">12dp</item>
     </style>

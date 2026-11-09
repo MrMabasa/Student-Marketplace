@@ -69,6 +69,16 @@
             android:minHeight="52dp"
             android:text="Browse Listings" />
 
+        <!-- Opens the student's saved favourite listings. -->
+        <Button
+            android:id="@+id/btnFavourites"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="My Favourites"
+            android:layout_marginTop="16dp" />
+
         <!-- Opens the create-listing screen. -->
         <Button
             android:id="@+id/btnCreateListing"

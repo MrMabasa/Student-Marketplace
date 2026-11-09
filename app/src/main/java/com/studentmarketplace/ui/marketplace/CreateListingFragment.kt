@@ -1,6 +1,10 @@
 package com.studentmarketplace.ui.marketplace
 
+import android.widget.ImageView
 import android.os.Bundle
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +24,34 @@ class CreateListingFragment : Fragment() {
 
     // Prevents repeated redirects during verification checks.
     private var isRedirecting = false
+
+    // Stores the photo selected by the student.
+    private var selectedPhotoUri: Uri? = null
+
+    // Opens the phone's photo picker.
+    private val photoPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            selectedPhotoUri = uri
+
+            if (uri != null) {
+                // Displays the selected photo in the preview.
+                view?.findViewById<ImageView>(R.id.ivListingPhotoPreview)?.apply {
+                    setImageURI(uri)
+                    visibility = View.VISIBLE
+                }
+                Toast.makeText(
+                    requireContext(),
+                    "Photo selected successfully.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "No photo selected.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
     // Loads the Create Listing XML layout.
     override fun onCreateView(
@@ -97,7 +129,6 @@ class CreateListingFragment : Fragment() {
 
     // Sets up the condition dropdown and submission navigation.
     private fun setupListingForm(view: View) {
-
         // Defines the standard item conditions available to sellers.
         val conditions = arrayOf(
             "Brand New",
@@ -106,7 +137,37 @@ class CreateListingFragment : Fragment() {
             "Fair",
             "For Parts / Repair"
         )
+        // Defines the approved marketplace categories.
+        val categories = arrayOf(
+            "Textbooks",
+            "Stationery",
+            "Electronics",
+            "Essentials",
+            "Other"
+        )
+        // Opens the phone's photo picker when the button is tapped.
+        view.findViewById<View>(R.id.btnAddListingPhoto).setOnClickListener {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(
+                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+            )
+        }
 
+// Connects the category choices to the dropdown field.
+        val categoryDropdown =
+            view.findViewById<AutoCompleteTextView>(R.id.etListingCategory)
+// Creates the category dropdown adapter.
+        val categoryAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            categories
+        )
+// Displays the available categories when tapped.
+        categoryDropdown.setAdapter(categoryAdapter)
+        categoryDropdown.setOnClickListener {
+            categoryDropdown.showDropDown()
+        }
         // Connects the condition choices to the dropdown field.
         val conditionDropdown =
             view.findViewById<AutoCompleteTextView>(R.id.etListingCondition)

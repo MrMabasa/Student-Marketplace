@@ -87,6 +87,16 @@
             android:textSize="16sp"
             android:layout_marginTop="24dp" />
 
+        <!-- Allows students to save or remove favourite listings. -->
+        <Button
+            android:id="@+id/btnFavourite"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="Save to Favourites"
+            android:layout_marginTop="24dp" />
+
         <!-- Provides the buyer's request action. -->
         <Button
             android:id="@+id/btnRequestItem"

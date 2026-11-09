@@ -6,7 +6,7 @@
     <!-- Main brand colours taken from the app logo. -->
     <color name="brand_blue">#073BAE</color>
     <color name="brand_navy">#071B59</color>
-    <color name="brand_yellow">#FFD600</color>
+    <color name="brand_yellow">#FF9800</color>
     <color name="brand_white">#FFFFFF</color>
 
     <!-- Supporting interface colours. -->

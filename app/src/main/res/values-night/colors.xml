@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Brand colours remain consistent in both modes. -->
+    <color name="brand_blue">#073BAE</color>
+    <color name="brand_navy">#071B59</color>
+    <color name="brand_yellow">#E8B64A</color>
+    <color name="brand_white">#FFFFFF</color>
+
+    <!-- Dark mode interface colours. -->
+    <color name="background_light">#101827</color>
+    <color name="text_primary">#F1F5FB</color>
+    <color name="text_secondary">#B8C4D6</color>
+    <color name="border_light">#39475B</color>
+
+    <color name="background_dark">#101827</color>
+    <color name="surface_dark">#1C293B</color>
+    <color name="text_primary_dark">#F1F5FB</color>
+    <color name="text_secondary_dark">#B8C4D6</color>
+    <color name="border_dark">#39475B</color>
+
+</resources>

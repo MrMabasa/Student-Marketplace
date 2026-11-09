@@ -104,6 +104,13 @@ class HomeFragment : Fragment() {
             )
         }
 
+        // Opens the student's saved favourite listings.
+        view.findViewById<View>(R.id.btnFavourites).setOnClickListener {
+            findNavController().navigate(
+                R.id.favouritesFragment
+            )
+        }
+
         // Opens the form for creating a marketplace listing.
         view.findViewById<View>(R.id.btnCreateListing).setOnClickListener {
             findNavController().navigate(

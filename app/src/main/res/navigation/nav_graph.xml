@@ -103,11 +103,28 @@
             app:destination="@id/listingDetailsFragment" />
     </fragment>
 
+    <!-- Displays the student's saved favourite listings. -->
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.studentmarketplace.ui.marketplace.FavouritesFragment"
+        android:label="My Favourites">
+
+        <action
+            android:id="@+id/action_favourites_to_listingDetails"
+            app:destination="@id/listingDetailsFragment" />
+
+    </fragment>
+
     <!-- Displays information about an individual listing. -->
     <fragment
         android:id="@+id/listingDetailsFragment"
         android:name="com.studentmarketplace.ui.marketplace.ListingDetailsFragment"
-        android:label="Listing Details" />
+        android:label="Listing Details">
+        <argument
+            android:name="listingId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 
     <!-- Allows a student to create a marketplace listing. -->
     <fragment

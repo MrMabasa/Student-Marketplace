@@ -134,27 +134,28 @@
             android:layout_marginTop="28dp"
             android:layout_marginBottom="12dp" />
 
-        <!-- Displays the current sample listing. -->
         <TextView
-            android:id="@+id/tvSampleListing"
+            android:id="@+id/tvListingStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Example listing: Introduction to Programming textbook"
-            android:textColor="@color/text_primary"
+            android:visibility="gone"
+            android:textColor="@color/text_secondary"
             android:textSize="16sp"
-            android:padding="16dp"
-            android:background="@color/brand_white" />
+            android:padding="16dp" />
 
-        <!-- Opens the sample listing details. -->
         <Button
-            android:id="@+id/btnViewListingDetails"
-            style="@style/StudentMarketplace.PrimaryButton"
+            android:id="@+id/btnRetryListings"
+            style="@style/StudentMarketplace.SecondaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="52dp"
-            android:text="View Listing Details"
-            android:layout_marginTop="16dp" />
+            android:visibility="gone"
+            android:text="Retry" />
 
+        <LinearLayout
+            android:id="@+id/listingContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
     </LinearLayout>
 
 </ScrollView>
