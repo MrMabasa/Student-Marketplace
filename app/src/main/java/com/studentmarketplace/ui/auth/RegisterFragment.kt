@@ -10,19 +10,25 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.studentmarketplace.R
-import com.studentmarketplace.utils.AppErrorHandler
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.studentmarketplace.R
+import com.studentmarketplace.data.remote.ListingApiClient
+import com.studentmarketplace.data.remote.RegisterRequest
+import com.studentmarketplace.utils.AppErrorHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
-
-// Displays the student registration screen and validates registration details.
 class RegisterFragment : Fragment() {
 
-    // Provides the Firebase Authentication instance for registration.
     private lateinit var firebaseAuth: FirebaseAuth
-    // Loads the registration XML layout.
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,13 +41,11 @@ class RegisterFragment : Fragment() {
         )
     }
 
-    // Sets up institution selection and registration validation.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Connects this registration screen to Firebase Authentication.
+
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // Lists available South African institutions.
         val institutions = arrayOf(
             "University of South Africa (UNISA)",
             "Rosebank International",
@@ -60,25 +64,33 @@ class RegisterFragment : Fragment() {
             "Durban University of Technology (DUT)",
             "Cape Peninsula University of Technology (CPUT)",
             "Richfield Graduate Institute of technology",
-            "Richfield Graduate Institute of technology",
             "Other / Not Listed"
         )
 
-        // Finds the institution dropdown and custom institution field.
         val institutionDropdown =
             view.findViewById<AutoCompleteTextView>(R.id.etInstitution)
 
         val customInstitution =
             view.findViewById<EditText>(R.id.etCustomInstitution)
 
-        // Finds the registration input fields.
-        val fullName = view.findViewById<EditText>(R.id.etRegisterName)
-        val email = view.findViewById<EditText>(R.id.etRegisterEmail)
-        val studentNumber = view.findViewById<EditText>(R.id.etStudentNumber)
-        val password = view.findViewById<EditText>(R.id.etRegisterPassword)
-        val confirmPassword = view.findViewById<EditText>(R.id.etConfirmPassword)
+        val fullName =
+            view.findViewById<EditText>(R.id.etRegisterName)
 
-        // Connects the available institutions to the dropdown.
+        val email =
+            view.findViewById<EditText>(R.id.etRegisterEmail)
+
+        val studentNumber =
+            view.findViewById<EditText>(R.id.etStudentNumber)
+
+        val password =
+            view.findViewById<EditText>(R.id.etRegisterPassword)
+
+        val confirmPassword =
+            view.findViewById<EditText>(R.id.etConfirmPassword)
+
+        val registerButton =
+            view.findViewById<View>(R.id.btnRegister)
+
         val institutionAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
@@ -87,13 +99,12 @@ class RegisterFragment : Fragment() {
 
         institutionDropdown.setAdapter(institutionAdapter)
 
-        // Opens the institution dropdown when tapped.
         institutionDropdown.setOnClickListener {
             institutionDropdown.showDropDown()
         }
 
-        // Shows the custom field only when Other / Not Listed is selected.
         institutionDropdown.setOnItemClickListener { _, _, position, _ ->
+
             if (institutions[position] == "Other / Not Listed") {
                 customInstitution.visibility = View.VISIBLE
             } else {
@@ -101,121 +112,151 @@ class RegisterFragment : Fragment() {
                 customInstitution.text.clear()
             }
 
-            // Clears any previous institution selection error.
             institutionDropdown.error = null
         }
 
-        // Validates the form when the registration button is pressed.
-        view.findViewById<View>(R.id.btnRegister).setOnClickListener {
+        registerButton.setOnClickListener {
 
-            // Checks that the student's full name is provided.
-            if (fullName.text.toString().trim().isEmpty()) {
+            val fullNameValue = fullName.text.toString().trim()
+            val emailValue = email.text.toString().trim()
+            val studentNumberValue = studentNumber.text.toString().trim()
+            val selectedInstitution =
+                institutionDropdown.text.toString().trim()
+
+            // Validate full name.
+            if (fullNameValue.isEmpty()) {
                 AppErrorHandler.showFieldError(
-                    view, fullName, "Please enter your full name."
+                    view,
+                    fullName,
+                    "Please enter your full name."
                 )
                 return@setOnClickListener
             }
 
-            // Checks that the email address has a valid format.
-            val emailValue = email.text.toString().trim()
-
-            if (emailValue.isEmpty() ||
+            // Validate email.
+            if (
+                emailValue.isEmpty() ||
                 !Patterns.EMAIL_ADDRESS.matcher(emailValue).matches()
             ) {
                 AppErrorHandler.showFieldError(
-                    view, email, "Please enter a valid email address."
+                    view,
+                    email,
+                    "Please enter a valid email address."
                 )
                 return@setOnClickListener
             }
 
-            // Checks that the student number is provided.
-            if (studentNumber.text.toString().trim().isEmpty()) {
+            // Validate student number.
+            if (studentNumberValue.isEmpty()) {
                 AppErrorHandler.showFieldError(
-                    view, studentNumber, "Please enter your student number."
+                    view,
+                    studentNumber,
+                    "Please enter your student number."
                 )
                 return@setOnClickListener
             }
 
-            // Checks that an institution has been selected.
-            val selectedInstitution = institutionDropdown.text.toString().trim()
-
+            // Validate institution.
             if (selectedInstitution.isEmpty()) {
                 AppErrorHandler.showFieldError(
-                    view, institutionDropdown, "Please select your institution."
+                    view,
+                    institutionDropdown,
+                    "Please select your institution."
                 )
                 return@setOnClickListener
             }
 
-            // Checks that a custom institution name is provided when required.
-            if (selectedInstitution == "Other / Not Listed" &&
+            if (
+                selectedInstitution == "Other / Not Listed" &&
                 customInstitution.text.toString().trim().isEmpty()
             ) {
                 AppErrorHandler.showFieldError(
-                    view, customInstitution, "Please enter your institution name."
+                    view,
+                    customInstitution,
+                    "Please enter your institution name."
                 )
                 return@setOnClickListener
             }
 
-            // Reads the password entered by the student.
+            val institutionValue =
+                if (selectedInstitution == "Other / Not Listed") {
+                    customInstitution.text.toString().trim()
+                } else {
+                    selectedInstitution
+                }
+
             val passwordValue = password.text.toString()
 
-            // Enforces the minimum password length.
+            // Validate password length.
             if (passwordValue.length < 8) {
                 AppErrorHandler.showFieldError(
-                    view, password, "Password must contain at least 8 characters."
+                    view,
+                    password,
+                    "Password must contain at least 8 characters."
                 )
                 return@setOnClickListener
             }
 
-            // Requires at least one uppercase letter.
+            // Validate uppercase character.
             if (!passwordValue.any { it.isUpperCase() }) {
                 AppErrorHandler.showFieldError(
-                    view, password, "Password must contain an uppercase letter."
+                    view,
+                    password,
+                    "Password must contain an uppercase letter."
                 )
                 return@setOnClickListener
             }
 
-            // Requires at least one lowercase letter.
+            // Validate lowercase character.
             if (!passwordValue.any { it.isLowerCase() }) {
                 AppErrorHandler.showFieldError(
-                    view, password, "Password must contain a lowercase letter."
+                    view,
+                    password,
+                    "Password must contain a lowercase letter."
                 )
                 return@setOnClickListener
             }
 
-            // Requires at least one number.
+            // Validate number.
             if (!passwordValue.any { it.isDigit() }) {
                 AppErrorHandler.showFieldError(
-                    view, password, "Password must contain a number."
+                    view,
+                    password,
+                    "Password must contain a number."
                 )
                 return@setOnClickListener
             }
 
-            // Requires at least one special character.
+            // Validate special character.
             if (!passwordValue.any { !it.isLetterOrDigit() }) {
                 AppErrorHandler.showFieldError(
-                    view, password, "Password must contain a special character."
+                    view,
+                    password,
+                    "Password must contain a special character."
                 )
                 return@setOnClickListener
             }
 
-            // Checks that the confirmation password is provided.
+            // Validate password confirmation.
             if (confirmPassword.text.toString().isEmpty()) {
                 AppErrorHandler.showFieldError(
-                    view, confirmPassword, "Please confirm your password."
+                    view,
+                    confirmPassword,
+                    "Please confirm your password."
                 )
                 return@setOnClickListener
             }
 
-            // Checks that both password entries match.
             if (passwordValue != confirmPassword.text.toString()) {
                 AppErrorHandler.showFieldError(
-                    view, confirmPassword, "Your passwords do not match."
+                    view,
+                    confirmPassword,
+                    "Your passwords do not match."
                 )
                 return@setOnClickListener
             }
 
-            // Clears field errors after successful validation.
+            // Clear validation errors.
             fullName.error = null
             email.error = null
             studentNumber.error = null
@@ -224,51 +265,160 @@ class RegisterFragment : Fragment() {
             password.error = null
             confirmPassword.error = null
 
-            // Creates a new student account using Firebase Authentication.
-            firebaseAuth.createUserWithEmailAndPassword(emailValue, passwordValue)
-                .addOnCompleteListener(requireActivity()) { task ->
+            registerButton.isEnabled = false
 
-                    // Checks whether Firebase successfully created the account.
-                    if (task.isSuccessful) {
+            // First try creating a new Firebase account.
+            firebaseAuth.createUserWithEmailAndPassword(
+                emailValue,
+                passwordValue
+            ).addOnCompleteListener createListener@{ task ->
 
-                        // Gets the newly created Firebase user.
-                        val firebaseUser = firebaseAuth.currentUser
+                if (task.isSuccessful) {
 
-                        // Sets the student's full name as their Firebase display name.
-                        val profileUpdates = com.google.firebase.auth.UserProfileChangeRequest.Builder()
-                            .setDisplayName(fullName.text.toString().trim())
-                            .build()
+                    val firebaseUser = firebaseAuth.currentUser
 
-                        // Saves the student's display name to their Firebase profile.
-                        firebaseUser?.updateProfile(profileUpdates)
-                            ?.addOnCompleteListener { profileTask ->
+                    if (firebaseUser == null) {
+                        registerButton.isEnabled = true
 
-                                // Confirms that the profile update succeeded.
-                                if (profileTask.isSuccessful) {
+                        AppErrorHandler.showError(
+                            view,
+                            "Your Firebase account was created, but could not be accessed. Please try signing in."
+                        )
+                        return@createListener
+                    }
 
-                                    // Sends an email verification link to the newly registered student.
+                    completeMarketplaceRegistration(
+                        view,
+                        firebaseUser,
+                        fullNameValue,
+                        studentNumberValue,
+                        institutionValue,
+                        registerButton
+                    )
+
+                } else if (
+                    task.exception is FirebaseAuthUserCollisionException
+                ) {
+
+                    // Existing Firebase account: sign in instead.
+                    firebaseAuth.signInWithEmailAndPassword(
+                        emailValue,
+                        passwordValue
+                    ).addOnCompleteListener signInListener@{ signInTask ->
+
+                        if (!signInTask.isSuccessful) {
+                            registerButton.isEnabled = true
+
+                            AppErrorHandler.showError(
+                                view,
+                                "This email is already registered. Please enter the correct password to complete your marketplace registration."
+                            )
+                            return@signInListener
+                        }
+
+                        val existingFirebaseUser = firebaseAuth.currentUser
+
+                        if (existingFirebaseUser == null) {
+                            registerButton.isEnabled = true
+
+                            AppErrorHandler.showError(
+                                view,
+                                "Could not access your existing account. Please try again."
+                            )
+                            return@signInListener
+                        }
+
+                        completeMarketplaceRegistration(
+                            view,
+                            existingFirebaseUser,
+                            fullNameValue,
+                            studentNumberValue,
+                            institutionValue,
+                            registerButton
+                        )
+                    }
+
+                } else {
+
+                    registerButton.isEnabled = true
+
+                    AppErrorHandler.showError(
+                        view,
+                        task.exception?.localizedMessage
+                            ?: "Registration failed. Please try again."
+                    )
+                }
+            }
+        }
+    }
+
+    private fun completeMarketplaceRegistration(
+        view: View,
+        firebaseUser: FirebaseUser,
+        fullName: String,
+        studentNumber: String,
+        institution: String,
+        registerButton: View
+    ) {
+
+        // Update Firebase display name.
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(fullName)
+            .build()
+
+        firebaseUser.updateProfile(profileUpdates)
+            .addOnCompleteListener profileListener@{ profileTask ->
+
+                if (!profileTask.isSuccessful) {
+                    registerButton.isEnabled = true
+
+                    AppErrorHandler.showError(
+                        view,
+                        "Profile setup failed. Please try again."
+                    )
+                    return@profileListener
+                }
+
+                // Refresh the Firebase authentication token.
+                firebaseUser.getIdToken(true)
+                    .addOnSuccessListener {
+
+                        viewLifecycleOwner.lifecycleScope.launch {
+
+                            try {
+
+                                // Register the user in the MySQL marketplace database.
+                                withContext(Dispatchers.IO) {
+
+                                    ListingApiClient.service.registerUser(
+                                        RegisterRequest(
+                                            fullName = fullName,
+                                            studentNumber = studentNumber,
+                                            institution = institution
+                                        )
+                                    )
+                                }
+
+                                // Send verification email if not already verified.
+                                if (!firebaseUser.isEmailVerified) {
+
                                     firebaseUser.sendEmailVerification()
-                                        .addOnCompleteListener { verificationTask ->
+                                        .addOnCompleteListener verificationListener@{ verificationTask ->
 
-                                            // Checks whether Firebase successfully sent the verification email.
+                                            registerButton.isEnabled = true
+
                                             if (verificationTask.isSuccessful) {
-
-                                                // Confirms that the verification email was sent.
                                                 AppErrorHandler.showSuccess(
                                                     view,
-                                                    "Account created! Please check your email to verify your account."
+                                                    "Marketplace account created. Please check your email to verify your account."
                                                 )
-
                                             } else {
-
-                                                // Explains that the account exists but email delivery needs retrying.
                                                 AppErrorHandler.showError(
                                                     view,
-                                                    "Your account was created, but the verification email could not be sent. You can resend it on the next screen."
+                                                    "Marketplace account created, but the verification email could not be sent. You can resend it on the next screen."
                                                 )
                                             }
 
-                                            // Opens the verification screen whether email delivery succeeded or failed.
                                             findNavController().navigate(
                                                 R.id.action_register_to_emailVerification
                                             )
@@ -276,23 +426,48 @@ class RegisterFragment : Fragment() {
 
                                 } else {
 
-                                    // Reports a profile update problem.
-                                    AppErrorHandler.showError(
-                                        view, "Account created, but profile setup failed. Please sign in again."
+                                    registerButton.isEnabled = true
+
+                                    AppErrorHandler.showSuccess(
+                                        view,
+                                        "Your marketplace account is ready."
+                                    )
+
+                                    findNavController().navigate(
+                                        R.id.action_register_to_emailVerification
                                     )
                                 }
+
+                            } catch (error: Exception) {
+
+                                registerButton.isEnabled = true
+
+                                val message = if (error is HttpException) {
+                                    error.response()
+                                        ?.errorBody()
+                                        ?.string()
+                                        ?: "Marketplace registration failed."
+                                } else {
+                                    error.localizedMessage
+                                        ?: "Could not connect to the marketplace server."
+                                }
+
+                                AppErrorHandler.showError(
+                                    view,
+                                    "Marketplace registration failed: $message"
+                                )
                             }
+                        }
+                    }
+                    .addOnFailureListener { error ->
 
-                    } else {
+                        registerButton.isEnabled = true
 
-                        // Displays Firebase's registration error.
                         AppErrorHandler.showError(
                             view,
-                            task.exception?.localizedMessage
-                                ?: "Registration failed. Please try again."
+                            "Authentication failed: ${error.localizedMessage}"
                         )
                     }
-                }
-        }
+            }
     }
 }

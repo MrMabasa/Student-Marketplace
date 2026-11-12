@@ -1,0 +1,3 @@
+
+ALTER TABLE users
+ADD COLUMN full_name VARCHAR(255) NULL AFTER user_id;

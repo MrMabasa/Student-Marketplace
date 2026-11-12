@@ -1,44 +1,49 @@
+
 package com.studentmarketplace.ui.marketplace
 
-import android.widget.ImageView
-import android.os.Bundle
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.studentmarketplace.R
+import com.studentmarketplace.data.repository.ListingRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
-// Displays the listing form only to verified students.
 class CreateListingFragment : Fragment() {
 
-    // Provides access to Firebase Authentication.
     private lateinit var firebaseAuth: FirebaseAuth
 
-    // Prevents repeated redirects during verification checks.
     private var isRedirecting = false
 
-    // Stores the photo selected by the student.
     private var selectedPhotoUri: Uri? = null
 
-    // Opens the phone's photo picker.
+    // Opens the phone's photo picker and displays the selected photo.
     private val photoPickerLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+
             selectedPhotoUri = uri
 
             if (uri != null) {
-                // Displays the selected photo in the preview.
                 view?.findViewById<ImageView>(R.id.ivListingPhotoPreview)?.apply {
                     setImageURI(uri)
                     visibility = View.VISIBLE
                 }
+
                 Toast.makeText(
                     requireContext(),
                     "Photo selected successfully.",
@@ -53,7 +58,6 @@ class CreateListingFragment : Fragment() {
             }
         }
 
-    // Loads the Create Listing XML layout.
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,34 +70,26 @@ class CreateListingFragment : Fragment() {
         )
     }
 
-    // Checks account verification before enabling the listing form.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialises Firebase Authentication.
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // Hides the form until verification is confirmed.
         view.visibility = View.INVISIBLE
 
-        // Retrieves the currently signed-in user.
         val user = firebaseAuth.currentUser
 
-        // Redirects users without an active session.
         if (user == null) {
             redirectToSignIn()
             return
         }
 
-        // Refreshes the account's latest verification status.
         user.reload().addOnCompleteListener { task ->
 
-            // Stops if the fragment is no longer attached.
             if (!isAdded || viewLifecycleOwnerLiveData.value == null) {
                 return@addOnCompleteListener
             }
 
-            // Blocks access if Firebase cannot refresh the account.
             if (!task.isSuccessful) {
                 Toast.makeText(
                     requireContext(),
@@ -101,35 +97,29 @@ class CreateListingFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                // Signs out when account status cannot be confirmed.
                 firebaseAuth.signOut()
                 redirectToSignIn()
                 return@addOnCompleteListener
             }
 
-            // Retrieves the refreshed Firebase user.
             val refreshedUser = firebaseAuth.currentUser
 
-            // Blocks access if the account no longer exists.
             if (refreshedUser == null) {
                 redirectToSignIn()
                 return@addOnCompleteListener
             }
 
-            // Enables the form only for verified students.
             if (refreshedUser.isEmailVerified) {
                 view.visibility = View.VISIBLE
                 setupListingForm(view)
             } else {
-                // Keeps the session active for email verification.
                 redirectToVerification()
             }
         }
     }
 
-    // Sets up the condition dropdown and submission navigation.
     private fun setupListingForm(view: View) {
-        // Defines the standard item conditions available to sellers.
+
         val conditions = arrayOf(
             "Brand New",
             "Like New",
@@ -137,7 +127,7 @@ class CreateListingFragment : Fragment() {
             "Fair",
             "For Parts / Repair"
         )
-        // Defines the approved marketplace categories.
+
         val categories = arrayOf(
             "Textbooks",
             "Stationery",
@@ -145,53 +135,175 @@ class CreateListingFragment : Fragment() {
             "Essentials",
             "Other"
         )
-        // Opens the phone's photo picker when the button is tapped.
-        view.findViewById<View>(R.id.btnAddListingPhoto).setOnClickListener {
-            photoPickerLauncher.launch(
-                PickVisualMediaRequest(
-                    ActivityResultContracts.PickVisualMedia.ImageOnly
-                )
-            )
-        }
 
-// Connects the category choices to the dropdown field.
+        // Opens the phone's photo picker.
+        view.findViewById<View>(R.id.btnAddListingPhoto)
+            .setOnClickListener {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
+            }
+
+        // Sets up the category dropdown.
         val categoryDropdown =
             view.findViewById<AutoCompleteTextView>(R.id.etListingCategory)
-// Creates the category dropdown adapter.
+
         val categoryAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
             categories
         )
-// Displays the available categories when tapped.
+
         categoryDropdown.setAdapter(categoryAdapter)
+
         categoryDropdown.setOnClickListener {
             categoryDropdown.showDropDown()
         }
-        // Connects the condition choices to the dropdown field.
+
+        // Sets up the condition dropdown.
         val conditionDropdown =
             view.findViewById<AutoCompleteTextView>(R.id.etListingCondition)
 
-        // Creates the dropdown list adapter.
         val conditionAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
             conditions
         )
 
-        // Displays the available conditions when the field is tapped.
         conditionDropdown.setAdapter(conditionAdapter)
+
         conditionDropdown.setOnClickListener {
             conditionDropdown.showDropDown()
         }
 
-        // Preserves the existing temporary submission navigation.
-        view.findViewById<View>(R.id.btnSubmitListing).setOnClickListener {
-            findNavController().navigate(R.id.action_createListing_to_browse)
-        }
+        // Publishes the listing.
+        view.findViewById<View>(R.id.btnSubmitListing)
+            .setOnClickListener {
+
+                val title = view.findViewById<EditText>(
+                    R.id.etListingTitle
+                ).text.toString().trim()
+
+                val description = view.findViewById<EditText>(
+                    R.id.etListingDescription
+                ).text.toString().trim()
+
+                val priceText = view.findViewById<EditText>(
+                    R.id.etListingPrice
+                ).text.toString().trim()
+
+                val category = categoryDropdown.text.toString().trim()
+
+                val condition = conditionDropdown.text.toString().trim()
+
+                val moduleCode = view.findViewById<EditText>(
+                    R.id.etModuleCode
+                ).text.toString().trim()
+
+                val price = priceText.toDoubleOrNull()
+
+                if (
+                    title.isBlank() ||
+                    description.isBlank() ||
+                    category.isBlank() ||
+                    condition.isBlank() ||
+                    price == null ||
+                    price <= 0
+                ) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Please complete all required fields with a valid price.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    return@setOnClickListener
+                }
+
+                val context = requireContext()
+
+                val imageBytes = try {
+                    selectedPhotoUri?.let { uri ->
+                        context.contentResolver.openInputStream(uri)?.use {
+                            it.readBytes()
+                        }
+                    }
+                } catch (exception: Exception) {
+                    Toast.makeText(
+                        context,
+                        "Could not read the selected photo.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    return@setOnClickListener
+                }
+
+                val imageMimeType = selectedPhotoUri?.let { uri ->
+                    context.contentResolver.getType(uri)
+                }
+
+                if (selectedPhotoUri != null &&
+                    (imageBytes == null || imageMimeType == null)
+                ) {
+                    Toast.makeText(
+                        context,
+                        "Could not access the selected photo. Please select it again.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    return@setOnClickListener
+                }
+
+                val submitButton =
+                    view.findViewById<View>(R.id.btnSubmitListing)
+
+                submitButton.isEnabled = false
+
+                viewLifecycleOwner.lifecycleScope.launch {
+
+                    try {
+                        withContext(Dispatchers.IO) {
+
+                            ListingRepository.createListing(
+                                title = title,
+                                description = description,
+                                price = price,
+                                condition = condition,
+                                category = category,
+                                moduleCode = moduleCode.ifBlank { null },
+                                imageBytes = imageBytes,
+                                imageMimeType = imageMimeType
+                            )
+                        }
+
+                        Toast.makeText(
+                            context,
+                            "Listing published successfully.",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        findNavController().navigate(
+                            R.id.action_createListing_to_browse
+                        )
+
+                    } catch (exception: Exception) {
+
+                        Toast.makeText(
+                            context,
+                            "Could not publish listing: ${
+                                exception.message ?: "Please try again."
+                            }",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    } finally {
+                        submitButton.isEnabled = true
+                    }
+                }
+            }
     }
 
-    // Redirects unverified students to email verification.
     private fun redirectToVerification() {
         if (!isAdded || isRedirecting) return
 
@@ -205,7 +317,6 @@ class CreateListingFragment : Fragment() {
         navController.navigate(R.id.emailVerificationFragment)
     }
 
-    // Redirects unauthenticated students to sign-in.
     private fun redirectToSignIn() {
         if (!isAdded || isRedirecting) return
 

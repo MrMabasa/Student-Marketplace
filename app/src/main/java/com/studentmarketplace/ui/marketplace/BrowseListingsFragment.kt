@@ -46,27 +46,52 @@ class BrowseListingsFragment : Fragment() {
         }
 
         user.reload().addOnCompleteListener { task ->
-            if (!isAdded || viewLifecycleOwnerLiveData.value == null) return@addOnCompleteListener
-            if (!task.isSuccessful) {
-                Toast.makeText(
-                    requireContext(),
-                    "Unable to verify your account. Please sign in again.",
-                    Toast.LENGTH_LONG
-                ).show()
-                firebaseAuth.signOut()
+
+            if (!isAdded) return@addOnCompleteListener
+
+            val refreshedUser = firebaseAuth.currentUser
+
+            if (refreshedUser == null) {
                 redirectToSignIn()
                 return@addOnCompleteListener
             }
 
-            val refreshedUser = firebaseAuth.currentUser
-            if (refreshedUser == null) {
-                redirectToSignIn()
-            } else if (refreshedUser.isEmailVerified) {
-                view.visibility = View.VISIBLE
-                setupSearchAndFilters(view)
-                loadListings(view)
+            if (task.isSuccessful) {
+
+                if (refreshedUser.isEmailVerified) {
+                    view.visibility = View.VISIBLE
+                    setupSearchAndFilters(view)
+                    loadListings(view)
+                } else {
+                    redirectToVerification()
+                }
+
             } else {
-                redirectToVerification()
+
+                // Internet may be unavailable.
+                // Use the locally cached Firebase verification status.
+                if (refreshedUser.isEmailVerified) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Offline mode: showing previously downloaded listings.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    view.visibility = View.VISIBLE
+                    setupSearchAndFilters(view)
+                    loadListings(view)
+
+                } else {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Connect to the internet to verify your account.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    redirectToVerification()
+                }
             }
         }
     }
@@ -122,18 +147,35 @@ class BrowseListingsFragment : Fragment() {
     private fun loadListings(view: View) {
         val status = view.findViewById<TextView>(R.id.tvListingStatus)
         val retry = view.findViewById<View>(R.id.btnRetryListings)
+
         status.text = "Loading listings…"
         status.visibility = View.VISIBLE
         retry.visibility = View.GONE
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                allListings = withContext(Dispatchers.IO) {
+                val result = withContext(Dispatchers.IO) {
                     ListingRepository.getListings()
                 }
-                applyFilters(view)
-            } catch (_: Exception) {
+
                 if (!isAdded) return@launch
+
+                allListings = result
+                applyFilters(view)
+
+                val connectivityMessage = if (result.isNotEmpty()) {
+                    "Listings loaded. Previously downloaded listings are available offline."
+                } else {
+                    "No listings are available yet."
+                }
+
+                status.text = connectivityMessage
+                status.visibility = if (result.isEmpty()) View.VISIBLE else View.GONE
+
+            } catch (e: Exception) {
+                if (!isAdded) return@launch
+
+                allListings = emptyList()
                 status.text = "Listings could not be loaded. Check your connection and try again."
                 status.visibility = View.VISIBLE
                 retry.visibility = View.VISIBLE
