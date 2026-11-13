@@ -163,4 +163,74 @@ router.post(
     }
 );
 
+router.post(
+    '/register-device',
+    authenticateFirebase,
+    async (request: Request, response: Response): Promise<void> => {
+        try {
+            const firebaseUser = request.firebaseUser;
+
+            if (!firebaseUser?.uid) {
+                response.status(401).json({
+                    message: 'A valid Firebase account is required.'
+                });
+                return;
+            }
+
+            const token =
+                typeof request.body.fcm_token === 'string'
+                    ? request.body.fcm_token.trim()
+                    : '';
+
+            if (!token || token.length > 512) {
+                response.status(400).json({
+                    message: 'A valid FCM device token is required.'
+                });
+                return;
+            }
+
+            const pool = getDatabasePool();
+
+            // Resolve the authenticated Firebase account to its marketplace user.
+            const [users] = await pool.execute<RowDataPacket[]>(
+                `SELECT user_id
+                   FROM users
+                  WHERE firebase_uid = ?
+                  LIMIT 1`,
+                [firebaseUser.uid]
+            );
+
+            if (users.length === 0) {
+                response.status(404).json({
+                    message: 'Marketplace account not found. Please complete registration first.'
+                });
+                return;
+            }
+
+            const userId = users[0].user_id as number;
+
+            // A device token can belong to only one marketplace user.
+            await pool.execute(
+                `INSERT INTO device_tokens (user_id, fcm_token)
+                 VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE
+                    user_id = VALUES(user_id),
+                    updated_at = CURRENT_TIMESTAMP`,
+                [userId, token]
+            );
+
+            response.status(200).json({
+                message: 'Device registered for notifications successfully.'
+            });
+
+        } catch (error) {
+            console.error('Device token registration failed:', error);
+
+            response.status(500).json({
+                message: 'Unable to register this device for notifications.'
+            });
+        }
+    }
+);
+
 export default router;

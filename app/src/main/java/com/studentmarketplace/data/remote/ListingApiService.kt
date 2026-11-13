@@ -32,6 +32,10 @@ data class RegisterResponse(
     @SerializedName("user_id")
     val userId: Int
 )
+data class DeviceTokenRequest(
+    @SerializedName("fcm_token")
+    val fcmToken: String
+)
 
 interface ListingApiService {
     @GET("listings")
@@ -58,6 +62,11 @@ interface ListingApiService {
     @POST("users/register")
     suspend fun registerUser(
         @Body request: RegisterRequest
+    ): RegisterResponse
+
+    @POST("users/register-device")
+    suspend fun registerDeviceToken(
+        @Body request: DeviceTokenRequest
     ): RegisterResponse
 }
 

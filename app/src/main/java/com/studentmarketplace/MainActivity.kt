@@ -8,6 +8,8 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.studentmarketplace.notifications.MarketplaceFirebaseMessagingService
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +25,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         requestNotificationPermission()
+        registerTokenForSignedInUser()
+    }
+
+    private fun registerTokenForSignedInUser() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser != null && currentUser.isEmailVerified) {
+            MarketplaceFirebaseMessagingService.refreshAndRegisterToken(
+                applicationContext
+            )
+        }
     }
 
     private fun requestNotificationPermission() {

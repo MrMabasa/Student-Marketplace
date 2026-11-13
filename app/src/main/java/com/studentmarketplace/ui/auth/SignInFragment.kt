@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.studentmarketplace.R
 import com.studentmarketplace.utils.AppErrorHandler
+import com.studentmarketplace.notifications.MarketplaceFirebaseMessagingService
 
 // Handles student sign-in and prevents unverified accounts from entering Home.
 class SignInFragment : Fragment() {
@@ -119,6 +120,10 @@ class SignInFragment : Fragment() {
 
                             // Allows access to Home only when the email is verified.
                             if (refreshedUser.isEmailVerified) {
+                                // Register this device for marketplace notifications.
+                                MarketplaceFirebaseMessagingService.refreshAndRegisterToken(
+                                    requireContext().applicationContext
+                                )
 
                                 AppErrorHandler.showSuccess(
                                     view,
