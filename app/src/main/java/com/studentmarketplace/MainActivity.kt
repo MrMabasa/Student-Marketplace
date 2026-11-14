@@ -7,9 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.studentmarketplace.notifications.MarketplaceFirebaseMessagingService
+import com.studentmarketplace.ui.settings.AppPreferences
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,10 +19,20 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
-            // Permission result will be handled by Android.
+            // Permission result is handled by Android.
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Apply the saved theme before creating the activity UI.
+        AppCompatDelegate.setDefaultNightMode(
+            if (AppPreferences.isDarkModeEnabled(this)) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

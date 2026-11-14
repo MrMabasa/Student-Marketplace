@@ -89,6 +89,16 @@
             android:text="Create a Listing"
             android:layout_marginTop="16dp" />
 
+        <!-- Opens the application settings screen. -->
+        <Button
+            android:id="@+id/btnSettings"
+            style="@style/StudentMarketplace.SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:text="Settings"
+            android:layout_marginTop="16dp" />
+
     </LinearLayout>
 
 </ScrollView>

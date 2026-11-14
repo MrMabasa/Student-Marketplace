@@ -117,6 +117,13 @@ class HomeFragment : Fragment() {
                 R.id.action_home_to_createListing
             )
         }
+
+        // Opens the application Settings screen.
+        view.findViewById<View>(R.id.btnSettings).setOnClickListener {
+            findNavController().navigate(
+                R.id.settingsFragment
+            )
+        }
     }
 
     // Redirects an unverified account to the verification screen.

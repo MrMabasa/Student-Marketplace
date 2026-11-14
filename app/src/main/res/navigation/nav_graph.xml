@@ -138,4 +138,10 @@
             app:destination="@id/browseListingsFragment" />
     </fragment>
 
+    <!-- Student preferences and application settings. -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.studentmarketplace.ui.settings.SettingsFragment"
+        android:label="Settings" />
+
 </navigation>
